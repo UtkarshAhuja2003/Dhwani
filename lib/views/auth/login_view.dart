@@ -3,6 +3,8 @@ import 'package:dhwani/widgets/auth/auth_header.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatelessWidget {
+  const LoginView({super.key});
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

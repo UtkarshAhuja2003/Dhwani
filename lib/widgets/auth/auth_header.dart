@@ -28,7 +28,7 @@ class AuthHeader extends StatelessWidget {
                 onTap: () {
                   if (authType == "SignIn") {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SignupView()));
+                        MaterialPageRoute(builder: (context) => const SignupView()));
                   }
                 },
                 child: Text(
@@ -52,7 +52,7 @@ class AuthHeader extends StatelessWidget {
                 onTap: () {
                   if (authType == "SignUp") {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginView()));
+                        MaterialPageRoute(builder: (context) => const LoginView()));
                   }
                 },
                 child: Text(

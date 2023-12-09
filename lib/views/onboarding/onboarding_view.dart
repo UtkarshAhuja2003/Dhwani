@@ -23,11 +23,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Positioned(
-        width: screenWidth,
-        child: PageView(
+      body: 
+        PageView(
           controller: controller,
           children: [
              FirstScreen(controller: controller),
@@ -36,7 +34,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
              LastScreen(controller: controller)
           ],
         ),
-      ),
       // bottomSheet: Container(
       //   padding: const EdgeInsets.symmetric(horizontal: 20),
       //   height: 80,
