@@ -1,3 +1,4 @@
+import 'package:dhwani/views/onboarding/onboarding_view.dart';
 import 'package:dhwani/widgets/auth/auth_header.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,9 @@ class LoginView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const OnboardingScreen()));
+              },
               style: ElevatedButton.styleFrom(
                 elevation: 10,
                 padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 12),
