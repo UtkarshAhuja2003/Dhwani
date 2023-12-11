@@ -8,10 +8,76 @@
                 {
                     "name":"प",
                     "description":"इस ध्वनि में होंठों को दंतों से अलग करके हवा को जल्दी से निकाला जाता है।",
-                    "sound":"",
+                    "sound":"sound_link",
                     "examples":[
-                        {"name":"पतंग","image":"","sound":""},
-                        {"name":"पत्ता","image":"","sound":""}
+                        {
+                            "name":"पतंग",
+                            "image":"image_link",
+                            "sound":"sound_link"
+                        },
+                        {
+                            "name":"पत्ता",
+                            "image":"image_link",
+                            "sound":"sound_link"
+                        }
+                    ]
+                },
+                {
+                    "name":"फ",
+                    "description":"इस ध्वनि में होंठों को दंतों से अलग करके हवा को जल्दी से निकाला जाता है।",
+                    "sound":"sound_link",
+                    "examples":[
+                        {
+                            "name":"फल",
+                            "image":"image_link",
+                            "sound":"sound_link"
+                        },
+                        {
+                            "name":"फूल",
+                            "image":"image_link",
+                            "sound":"sound_link"
+                        }
+                    ]
+                }
+            ] 
+        },
+        {
+            "dhwaniName":"तालु",
+            "description":"ओष्ठय-ध्वनियाँ वे होती हैं, जो हमारे होंठों को मिलाकर निकलती हैं।",
+            "source":"throat",
+            "dhwanis":[
+                {
+                    "name":"च",
+                    "description":"इस ध्वनि में होंठों को दंतों से अलग करके हवा को जल्दी से निकाला जाता है।",
+                    "sound":"sound_link",
+                    "examples":[
+                        {
+                            "name":"चाँद",
+                            "image":"image_link",
+                            "sound":"sound_link"
+                        },
+                        {
+                            "name":"चश्मा",
+                            "image":"image_link",
+                            "sound":"sound_link"
+                        }
+                    ]
+                },
+                {
+                    "name":"छ",
+                    "description":"इस ध्वनि में होंठों को दंतों से अलग करके हवा को जल्दी से निकाला जाता है।",
+                    "sound":"sound_link",
+                    "examples":[
+                        {
+                            "name":"छाता",
+                            "image":"image_link",
+                            "sound":"sound_link"
+                        },
+                        {
+                            "name":"छिलका",
+                            "image":"image_link",
+                            "sound":"sound_link"
+                        }
                     ]
                 }
             ] 

@@ -1,5 +1,5 @@
 // import 'package:dhwani/views/auth/signup_view.dart';
-import 'package:dhwani/views/auth/signup_view.dart';
+import 'package:dhwani/views/dhwani_main/dhwani_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
@@ -8,7 +8,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: SafeArea(bottom:false,child: SignupView()),
+      body: SafeArea(bottom:false,child: DhwaniScreen()),
     );
   }
 }
