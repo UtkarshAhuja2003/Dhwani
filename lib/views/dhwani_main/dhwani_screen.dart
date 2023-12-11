@@ -37,35 +37,66 @@ class DhwaniScreen extends StatelessWidget {
             GridView.builder(
               physics: const ScrollPhysics(),
                 shrinkWrap: true,
-                padding: const EdgeInsets.all(32.0),
+                padding: const EdgeInsets.all(20.0),
                 gridDelegate:const  SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 25.0,
-                  mainAxisSpacing: 25.0,
+                  crossAxisSpacing: 0.0,
+                  mainAxisSpacing: 0.0,
                 ),
                 itemCount: 10,
                 itemBuilder: (BuildContext context, int index) {
-                  return ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      elevation: 10,
-                      backgroundColor: const Color(0xff0CC0DF),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'प',
-                        style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 45,
-                                  fontFamily: "NotoSansDevanagari",
-                                  color: Colors.white,
-                          )
+                  return Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(200)),
+                    child: Container(
+                      // padding: EdgeInsets.all(10),
+                      
+                      margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 13),
+                      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10),boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          offset: const Offset(0, 4), // Offset the shadow downward
+                          spreadRadius: 2, // Increase the spread radius
+                          blurRadius: 8, // Increase the blur radius
+                        )
+                      ],),
+                      child: Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 5, right: 5, top: 6),
+                            child: Image(
+                              image: AssetImage("assets/uccharan.png"),
+                              // width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                    
+                            },
+                            style: ElevatedButton.styleFrom(
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              primary: const Color(0xff0CC0DF
+                              ), // Button background color
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(2), // Adjust the padding as needed
+                              child: Text(
+                                'उच्चारण के मूल',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
+
                 },
               ),
           ],
