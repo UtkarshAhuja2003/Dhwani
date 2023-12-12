@@ -1,8 +1,23 @@
+import 'package:dhwani/views/dhwani_main/dhwani/dhwani_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:dhwani/model/dhwani.dart';
+import 'package:flutter/services.dart';
 
-class DhwaniScreen extends StatelessWidget {
+class DhwaniScreen extends StatefulWidget {
   const DhwaniScreen({Key? key}) : super(key: key);
 
+
+
+  @override
+  State<DhwaniScreen> createState() => _DhwaniScreenState();
+}
+
+class _DhwaniScreenState extends State<DhwaniScreen> {
+  Future<List<DhwaniElement>> loadDhwaniData() async {
+    final rawDhwaniData = await rootBundle.loadString("assets/config/dhwani.json");
+    final dhwani = dhwaniFromJson(rawDhwaniData);
+    return dhwani.dhwani;
+  }
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -17,7 +32,7 @@ class DhwaniScreen extends StatelessWidget {
               decoration: const BoxDecoration(
                 color: Color(0xffE6F4F1),
               ),
-              child: 
+              child:
                   const Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -34,71 +49,98 @@ class DhwaniScreen extends StatelessWidget {
               width: screenWidth,
               height: 2,
             ),
-            GridView.builder(
-              physics: const ScrollPhysics(),
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(20.0),
-                gridDelegate:const  SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 0.0,
-                  mainAxisSpacing: 0.0,
-                ),
-                itemCount: 10,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(200)),
-                    child: Container(
-                      // padding: EdgeInsets.all(10),
-                      
-                      margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 13),
-                      decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10),boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          offset: const Offset(0, 4), // Offset the shadow downward
-                          spreadRadius: 2, // Increase the spread radius
-                          blurRadius: 8, // Increase the blur radius
-                        )
-                      ],),
-                      child: Column(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 5, right: 5, top: 6),
-                            child: Image(
-                              image: AssetImage("assets/uccharan.png"),
-                              // width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                    
-                            },
-                            style: ElevatedButton.styleFrom(
-                              elevation: 10,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              primary: const Color(0xff0CC0DF
-                              ), // Button background color
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(2), // Adjust the padding as needed
-                              child: Text(
-                                'उच्चारण के मूल',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+            FutureBuilder(
+              future: loadDhwaniData(),
+              builder: (context, snapshot) {
+                if(snapshot.connectionState == ConnectionState.done)
+                  {
+                    final DhwaniData = snapshot.data;
+                    return GridView.builder(
+                      physics: const ScrollPhysics(),
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(10.0),
+                      gridDelegate:const  SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 0.0,
+                        mainAxisSpacing: 0.0,
                       ),
-                    ),
-                  );
+                      itemCount: DhwaniData!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final dhwani = DhwaniData[index];
+                        return Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(200)),
+                          child: Container(
+                            // padding: EdgeInsets.all(10),
 
-                },
-              ),
+                            margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 13),
+                            decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10),boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                offset: const Offset(0, 4), // Offset the shadow downward
+                                spreadRadius: 2, // Increase the spread radius
+                                blurRadius: 8, // Increase the blur radius
+                              )
+                            ],),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            DhwaniDetailScreen(
+                                                dhwani: dhwani)
+                                    )
+                                );
+                              },
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 5, right: 5, top: 6),
+                                    child: Image.network(
+                                      dhwani.coverImage,
+                                      // width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 10,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      primary: const Color(0xff0CC0DF
+                                      ), // Button background color
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(2), // Adjust the padding as needed
+                                      child: Text(
+                                        dhwani.dhwaniName,
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+
+                      },
+                    );
+                  }
+                else{
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                }
+              }
+            ),
           ],
         ),
       ),

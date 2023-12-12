@@ -10,7 +10,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const SafeArea(bottom: false, child: DhwaniDetailScreen()),
+      body: const SafeArea(bottom: false, child: DhwaniScreen()),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(40),

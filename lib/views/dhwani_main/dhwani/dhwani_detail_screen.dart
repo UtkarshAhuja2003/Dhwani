@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 
-class DhwaniDetailScreen extends StatelessWidget {
-  const DhwaniDetailScreen({Key? key});
+import '../../../model/dhwani.dart';
+import 'dhwani_example/dhwani_example_screen.dart';
 
+
+class DhwaniDetailScreen extends StatefulWidget {
+  const DhwaniDetailScreen({Key? key, required this.dhwani});
+
+  final DhwaniElement dhwani;
+
+  @override
+  State<DhwaniDetailScreen> createState() => _DhwaniDetailScreenState();
+}
+
+class _DhwaniDetailScreenState extends State<DhwaniDetailScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -68,24 +79,24 @@ class DhwaniDetailScreen extends StatelessWidget {
             ),
              Padding(
                padding: const EdgeInsets.only(left: 30, right: 30),
-               child: Image(
-                image: const AssetImage("assets/speech-mechanism-new.png"),
+               child: Image.network(
+                widget.dhwani.dhwaniImage,
                 width: screenWidth,
                 fit: BoxFit.fill,
                            ),
              ),
-            const Padding(
-              padding: EdgeInsets.all(30.0),
-              child: Text("ओष्ठय-ध्वनियाँ वे होती हैं, जो हमारे होंठों को मिलाकर निकलती हैं।",
-                style: TextStyle(
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Text(widget.dhwani.description,
+                style: const TextStyle(
                   fontWeight: FontWeight.w300,
                   fontSize: 23,
                   fontFamily: "NotoSansDevanagari",
                   color: Color(0xff04434E),
                 ),),
             ),
-            const Text("हिंदी में 5 मुख्य ओष्ठय ध्वनियाँ हैं :",
-                style: TextStyle(
+            Text("हिंदी में ${widget.dhwani.dhwanis.length} मुख्य ओष्ठय ध्वनियाँ हैं :",
+                style: const TextStyle(
                   fontWeight: FontWeight.w300,
                   fontSize: 23,
                   fontFamily: "NotoSansDevanagari",
@@ -100,10 +111,10 @@ class DhwaniDetailScreen extends StatelessWidget {
                 crossAxisSpacing: 25.0,
                 mainAxisSpacing: 25.0,
               ),
-              itemCount: 5,
+              itemCount: widget.dhwani.dhwanis.length,
               itemBuilder: (BuildContext context, int index) {
-                return const Text("प",
-                  style: TextStyle(
+                return Text(widget.dhwani.dhwanis[index].name,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 50,
                     fontFamily: "NotoSansDevanagari",
@@ -124,10 +135,19 @@ class DhwaniDetailScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onPressed: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      child: const Icon(Icons.arrow_forward, color: Colors.white,),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DhwaniExampleScreen(
+                                      alphabet: widget.dhwani.dhwanis)
+                          )
+                      );
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Icon(Icons.arrow_forward, color: Colors.white,),
                     )
                   ),
                 ],

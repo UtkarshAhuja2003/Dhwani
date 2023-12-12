@@ -1,11 +1,23 @@
+import 'package:dhwani/views/dhwani_main/dhwani/dhwani_example/dhwani_ex_detail_screen.dart';
 import 'package:flutter/material.dart';
 
-class DhwaniExampleScreen extends StatelessWidget {
-  const DhwaniExampleScreen({Key? key}) : super(key: key);
+import '../../../../model/dhwani.dart';
 
+class DhwaniExampleScreen extends StatefulWidget {
+  const DhwaniExampleScreen({Key? key ,  required this.alphabet}) : super(key: key);
+
+  final List<DhwaniClass> alphabet;
+
+  @override
+  State<DhwaniExampleScreen> createState() => _DhwaniExampleScreenState();
+}
+
+class _DhwaniExampleScreenState extends State<DhwaniExampleScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
+
 
     return Material(
       child: SingleChildScrollView(
@@ -95,10 +107,19 @@ class DhwaniExampleScreen extends StatelessWidget {
                   crossAxisSpacing: 25.0,
                   mainAxisSpacing: 25.0,
                 ),
-                itemCount: 10,
+                itemCount: widget.alphabet.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  DhwaniExampleDetailScreen(
+                                     alphabet : widget.alphabet[index])
+                          )
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       elevation: 10,
                       backgroundColor: const Color(0xff0CC0DF),
@@ -106,10 +127,10 @@ class DhwaniExampleScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        'प',
-                        style: TextStyle(
+                        widget.alphabet[index].name,
+                        style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 45,
                                   fontFamily: "NotoSansDevanagari",

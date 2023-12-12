@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final dhwani = dhwaniFromJson(jsonString);
+
 import 'dart:convert';
 
 Dhwani dhwaniFromJson(String str) => Dhwani.fromJson(json.decode(str));
@@ -23,27 +27,31 @@ class Dhwani {
 class DhwaniElement {
     String dhwaniName;
     String description;
-    String source;
+    String coverImage;
+    String dhwaniImage;
     List<DhwaniClass> dhwanis;
 
     DhwaniElement({
         required this.dhwaniName,
         required this.description,
-        required this.source,
+        required this.coverImage,
+        required this.dhwaniImage,
         required this.dhwanis,
     });
 
     factory DhwaniElement.fromJson(Map<String, dynamic> json) => DhwaniElement(
         dhwaniName: json["dhwaniName"],
         description: json["description"],
-        source: json["source"],
+        coverImage: json["coverImage"],
+        dhwaniImage: json["dhwaniImage"],
         dhwanis: List<DhwaniClass>.from(json["dhwanis"].map((x) => DhwaniClass.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
         "dhwaniName": dhwaniName,
         "description": description,
-        "source": source,
+        "coverImage": coverImage,
+        "dhwaniImage": dhwaniImage,
         "dhwanis": List<dynamic>.from(dhwanis.map((x) => x.toJson())),
     };
 }
