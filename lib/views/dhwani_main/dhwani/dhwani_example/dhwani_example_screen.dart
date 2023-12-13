@@ -1,4 +1,5 @@
 import 'package:dhwani/views/dhwani_main/dhwani/dhwani_example/dhwani_ex_detail_screen.dart';
+import 'package:dhwani/views/dhwani_main/dhwani/dhwani_example/dhwani_mock_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../model/dhwani.dart';
@@ -118,43 +119,67 @@ class _DhwaniExampleScreenState extends State<DhwaniExampleScreen> {
                   crossAxisSpacing: 25.0,
                   mainAxisSpacing: 25.0,
                 ),
-                itemCount: widget.alphabet.length,
+                itemCount: widget.alphabet.length+1,
                 itemBuilder: (BuildContext context, int index) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  DhwaniExampleDetailScreen(
-                                     alphabet : widget.alphabet[index])
-                          )
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      elevation: 10,
-                      backgroundColor: const Color(0xff0CC0DF),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        widget.alphabet[index].name,
-                        style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 45,
-                                  fontFamily: "NotoSansDevanagari",
-                                  color: Colors.white,
-                          )
-                      ),
-                    ),
-                  );
+                  return
+                    (index<widget.alphabet.length)?Button(widget: widget,index:index,buttonType:"dynamic")
+                        :Button(widget: widget,index:index,buttonType:"static");
                 },
               ),
           ],
         ),
       ),
     );
+  }
+}
+
+class Button extends StatelessWidget {
+  const Button({
+    super.key,
+    required this.widget,
+    required this.index,
+    required this.buttonType
+  });
+
+  final DhwaniExampleScreen widget;
+  final int index;
+  final String buttonType;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+    onPressed: () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+              (buttonType=="dynamic")?DhwaniExampleDetailScreen(
+                  alphabet : widget.alphabet[index]
+              )
+                  :const DhwaniMockScreen()
+          )
+      );
+    },
+    style: ElevatedButton.styleFrom(
+      elevation: 10,
+      backgroundColor: const Color(0xff0CC0DF),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
+    child: Center(
+      child: Text(
+          (buttonType=="dynamic")?widget.alphabet[index].name
+              :"अभ्यास करें",
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 35,
+                  fontFamily: "NotoSansDevanagari",
+                  color: Colors.white,
+          )
+      ),
+    ),
+                      );
   }
 }
