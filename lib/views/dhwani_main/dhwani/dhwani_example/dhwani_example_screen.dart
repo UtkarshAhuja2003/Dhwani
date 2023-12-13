@@ -2,6 +2,7 @@ import 'package:dhwani/views/dhwani_main/dhwani/dhwani_example/dhwani_ex_detail_
 import 'package:flutter/material.dart';
 
 import '../../../../model/dhwani.dart';
+import '../../dhwani_screen.dart';
 
 class DhwaniExampleScreen extends StatefulWidget {
   const DhwaniExampleScreen({super.key ,  required this.alphabet});
@@ -38,7 +39,9 @@ class _DhwaniExampleScreenState extends State<DhwaniExampleScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -65,7 +68,15 @@ class _DhwaniExampleScreenState extends State<DhwaniExampleScreen> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const DhwaniScreen()
+                                )
+                            );
+                          },
                           child: const Text(
                             "अगला खंड",
                             style: TextStyle(

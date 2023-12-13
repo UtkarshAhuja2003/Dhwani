@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../model/dhwani.dart';
+import '../dhwani_screen.dart';
 import 'dhwani_example/dhwani_example_screen.dart';
 
 
@@ -44,7 +45,15 @@ class _DhwaniDetailScreenState extends State<DhwaniDetailScreen> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const DhwaniScreen()
+                                )
+                            );
+                          },
                           child: const Text(
                             "अगला खंड",
                             style: TextStyle(
@@ -58,11 +67,11 @@ class _DhwaniDetailScreenState extends State<DhwaniDetailScreen> {
                       ],
                     ),
                   ),
-                  const Align(
+                  Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "ओष्ठय ध्वनियाँ",
-                      style: TextStyle(
+                      widget.dhwani.dhwaniName,
+                      style: const TextStyle(
                         fontSize: 40,
                         color: Colors.black,
                         fontWeight: FontWeight.w700,

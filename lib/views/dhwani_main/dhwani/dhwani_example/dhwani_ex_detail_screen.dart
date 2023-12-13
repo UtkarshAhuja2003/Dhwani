@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../model/dhwani.dart';
@@ -12,6 +13,12 @@ class DhwaniExampleDetailScreen extends StatefulWidget {
 }
 
 class _DhwaniExampleDetailScreenState extends State<DhwaniExampleDetailScreen> {
+
+  final audioPlayer = AudioPlayer();
+  Future<void> playAudioFromUrl(String url) async {
+    await audioPlayer.play(UrlSource(url));
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -33,7 +40,7 @@ class _DhwaniExampleDetailScreenState extends State<DhwaniExampleDetailScreen> {
                     padding: const EdgeInsets.all(12.0),
                     child: TextButton(
                       onPressed: () {
-                        
+                        Navigator.of(context).pop();
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -88,7 +95,10 @@ class _DhwaniExampleDetailScreenState extends State<DhwaniExampleDetailScreen> {
                   ),
                   const SizedBox(height: 20,),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      playAudioFromUrl(widget.alphabet.sound);
+
+                    },
                     style: ElevatedButton.styleFrom(
                       elevation: 10,
                       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
@@ -113,59 +123,72 @@ class _DhwaniExampleDetailScreenState extends State<DhwaniExampleDetailScreen> {
                   ),
                   const SizedBox(height: 20,),
 
-                  SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        Padding(
-                            padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
-                            child: Row(
-                              children: [
-                                Stack(
-                                  children: [
-                                    Container(
-                                      width: 80,
-                                      height: 80,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10), // Adjust the value for the desired roundness
-                                      ),
-                                    ),
-                                    const Positioned.fill(
-                                      child: Center(
-                                        child: Image(
-                                          image: AssetImage("assets/chand2.png"),
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
+                        child: ListView.builder(
+                          physics: const ScrollPhysics(),
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.all(0.0),
+                          itemCount: widget.alphabet.examples.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Row(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Container(
+                                        width: 80,
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(10), // Adjust the value for the desired roundness
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-
-                                const Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 20),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("चाँद",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 23,
-                                            fontFamily: "NotoSansDevanagari",
-                                            color: Colors.white,
-                                          ),),
-                                        Image(
-                                          image: AssetImage("assets/smallSpeaker.png"),
+                                      Positioned.fill(
+                                        child: Center(
+                                          child: Image.network(
+                                            widget.alphabet.examples[index].image,
+                                          ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                )
-                              ],
-                            ),
-                          )
-                      ],
-                    ),
+
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 20),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(widget.alphabet.examples[index].name,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 23,
+                                              fontFamily: "NotoSansDevanagari",
+                                              color: Colors.white,
+                                            ),),
+                                          InkWell(
+                                            onTap: () {
+                                              playAudioFromUrl(widget.alphabet.examples[index].sound);
+                                            },
+                                            child: const Image(
+                                              image: AssetImage("assets/smallSpeaker.png"),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 50,)
 
