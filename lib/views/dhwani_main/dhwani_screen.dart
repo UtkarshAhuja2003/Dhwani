@@ -4,7 +4,7 @@ import 'package:dhwani/model/dhwani.dart';
 import 'package:flutter/services.dart';
 
 class DhwaniScreen extends StatefulWidget {
-  const DhwaniScreen({Key? key}) : super(key: key);
+  const DhwaniScreen({super.key});
 
 
 
@@ -54,7 +54,7 @@ class _DhwaniScreenState extends State<DhwaniScreen> {
               builder: (context, snapshot) {
                 if(snapshot.connectionState == ConnectionState.done)
                   {
-                    final DhwaniData = snapshot.data;
+                    final dhwaniData = snapshot.data;
                     return GridView.builder(
                       physics: const ScrollPhysics(),
                       shrinkWrap: true,
@@ -64,15 +64,15 @@ class _DhwaniScreenState extends State<DhwaniScreen> {
                         crossAxisSpacing: 0.0,
                         mainAxisSpacing: 0.0,
                       ),
-                      itemCount: DhwaniData!.length,
+                      itemCount: dhwaniData!.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final dhwani = DhwaniData[index];
+                        final dhwani = dhwaniData[index];
                         return Container(
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(200)),
                           child: Container(
                             // padding: EdgeInsets.all(10),
 
-                            margin: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 13),
+                            margin: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 13),
                             decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10),boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.3),
@@ -111,11 +111,10 @@ class _DhwaniScreenState extends State<DhwaniScreen> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      primary: const Color(0xff0CC0DF
-                                      ), // Button background color
+                                      backgroundColor: const Color(0xff0CC0DF), // Button background color
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsets.all(2), // Adjust the padding as needed
+                                      padding: const EdgeInsets.all(2), // Adjust the padding as needed
                                       child: Text(
                                         dhwani.dhwaniName,
                                         style: const TextStyle(

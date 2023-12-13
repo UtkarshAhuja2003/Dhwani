@@ -1,27 +1,24 @@
-// import 'package:dhwani/views/auth/signup_view.dart';
-import 'package:dhwani/views/dhwani_main/dhwani/dhwani_detail_screen.dart';
-import 'package:dhwani/views/dhwani_main/dhwani/dhwani_example/dhwani_example_screen.dart';
 import 'package:dhwani/views/dhwani_main/dhwani_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({Key? key});
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const SafeArea(bottom: false, child: DhwaniScreen()),
+    return const Scaffold(
+      body:  SafeArea(bottom: false, child: DhwaniScreen()),
       bottomNavigationBar: ClipRRect(
-        borderRadius: const BorderRadius.only(
+        borderRadius:  BorderRadius.only(
           topLeft: Radius.circular(40),
           topRight: Radius.circular(40),
         ),
         child: BottomAppBar(
-          color: const Color(0xffE6FAFD),
+          color:  Color(0xffE6FAFD),
           elevation: 0, // Optional: Set elevation to 0 to remove shadow
-          child: Container(
+          child: SizedBox(
             height: 67,
-            child: const Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Icon(

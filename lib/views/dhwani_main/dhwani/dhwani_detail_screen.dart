@@ -5,7 +5,7 @@ import 'dhwani_example/dhwani_example_screen.dart';
 
 
 class DhwaniDetailScreen extends StatefulWidget {
-  const DhwaniDetailScreen({Key? key, required this.dhwani});
+  const DhwaniDetailScreen({super.key, required this.dhwani});
 
   final DhwaniElement dhwani;
 

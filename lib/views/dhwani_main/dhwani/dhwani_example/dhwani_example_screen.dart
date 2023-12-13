@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../model/dhwani.dart';
 
 class DhwaniExampleScreen extends StatefulWidget {
-  const DhwaniExampleScreen({Key? key ,  required this.alphabet}) : super(key: key);
+  const DhwaniExampleScreen({super.key ,  required this.alphabet});
 
   final List<DhwaniClass> alphabet;
 

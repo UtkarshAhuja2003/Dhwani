@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../model/dhwani.dart';
 
 class DhwaniExampleDetailScreen extends StatefulWidget {
-  const DhwaniExampleDetailScreen({Key? key, required this.alphabet}) : super(key: key);
+  const DhwaniExampleDetailScreen({super.key, required this.alphabet});
 
   final DhwaniClass alphabet;
 
@@ -33,9 +33,7 @@ class _DhwaniExampleDetailScreenState extends State<DhwaniExampleDetailScreen> {
                     padding: const EdgeInsets.all(12.0),
                     child: TextButton(
                       onPressed: () {
-                        // controller.nextPage(
-                        //     duration: const Duration(milliseconds: 500),
-                        //     curve: Curves.easeInOut);
+                        
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -115,14 +113,11 @@ class _DhwaniExampleDetailScreenState extends State<DhwaniExampleDetailScreen> {
                   ),
                   const SizedBox(height: 20,),
 
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: Column(
                       children: [
-                        ListView.builder(
-                            itemCount: widget.alphabet.examples.length,
-                            itemBuilder: (BuildContext context, int index){
-                          return Padding(
+                        Padding(
                             padding: const EdgeInsets.only(left: 30, right: 30, top: 10),
                             child: Row(
                               children: [
@@ -168,8 +163,7 @@ class _DhwaniExampleDetailScreenState extends State<DhwaniExampleDetailScreen> {
                                 )
                               ],
                             ),
-                          );
-                        })
+                          )
                       ],
                     ),
                   ),
