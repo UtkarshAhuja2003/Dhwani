@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class DhwaniMockScreen extends StatefulWidget {
   const DhwaniMockScreen({super.key});
@@ -12,6 +15,7 @@ class DhwaniMockScreen extends StatefulWidget {
 
 class DhwaniMockScreenState extends State<DhwaniMockScreen> {
   final recorder = FlutterSoundRecorder();
+  final audioPlayer = AudioPlayer();
   bool isRecorded = false;
 
   @override
@@ -30,23 +34,24 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
     if (status != PermissionStatus.granted) {
       throw "Microphone permission not granted";
     }
-    await recorder.stopRecorder();
   }
 
 
-  Future<void> record() async {
+  Future record() async {
+    await recorder.openRecorder();
     await recorder.startRecorder(toFile: 'audio');
-    await Future.delayed(const Duration(seconds: 2));
-    await stop(); // Call the stop function after 2 seconds
-    print("recording stopped");
+    await Future.delayed(const Duration(seconds: 5));
+    await stop();
     setState(() {
       isRecorded = true;
     });
   }
-  Future<void> stop() async {
-    final path = await recorder.stopRecorder();
-    print("Recording stopped. Path: $path");
+  late File audioFile;
+  Future stop() async {
+    final audioPath = await recorder.stopRecorder();
+    audioFile=File(audioPath!);
   }
+
 
 
   @override
@@ -138,7 +143,7 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
                   { }
                 else if (isRecorded)
                   {
-                    //play
+                    await audioPlayer.play(UrlSource(audioFile.path));
                   }
                 else{
                   await record();
