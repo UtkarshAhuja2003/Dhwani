@@ -17,12 +17,15 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
   final recorder = FlutterSoundRecorder();
   final audioPlayer = AudioPlayer();
   bool isRecorded = false;
+  bool isPlaying = false;
+  Color _containerColor = const Color(0xff00CAED);
 
   @override
   void initState() {
     super.initState();
     initRecorder();
   }
+
   @override
   void dispose() {
     recorder.closeRecorder();
@@ -36,7 +39,6 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
     }
   }
 
-
   Future record() async {
     await recorder.openRecorder();
     await recorder.startRecorder(toFile: 'audio');
@@ -46,13 +48,15 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
       isRecorded = true;
     });
   }
+
   late File audioFile;
   Future stop() async {
+    setState(() {
+      _containerColor = const Color(0xff00caed);
+    });
     final audioPath = await recorder.stopRecorder();
-    audioFile=File(audioPath!);
+    audioFile = File(audioPath!);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -139,22 +143,29 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
             const SizedBox(height: 20),
             InkWell(
               onTap: () async {
-                if(recorder.isRecording)
-                  { }
-                else if (isRecorded)
-                  {
-                    await audioPlayer.play(UrlSource(audioFile.path));
-                  }
-                else{
+                setState(() {
+                  _containerColor = (_containerColor == const Color(0xff00caed))
+                      ? const Color(0xff319F43)
+                      : const Color(0xff00caed);
+                });
+                if (isRecorded) {
+                  isPlaying = true;
+                  setState(() {
+                    _containerColor = const Color(0xff319F43);
+                  });
+                  await audioPlayer.play(UrlSource(audioFile.path));
+                  setState(() {
+                    _containerColor = const Color(0xff00caed);
+                  });
+                } else {
                   await record();
                 }
-                setState(() {});
               },
               child: Container(
                 width: 120,
                 height: 120,
                 decoration: BoxDecoration(
-                  color: const Color(0xff00CAED),
+                  color: _containerColor,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: const [
                     BoxShadow(
@@ -165,11 +176,11 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
                   ],
                 ),
                 child: Icon(
-                    recorder.isRecording
+                    (isPlaying == true)
                         ? CupertinoIcons.waveform
-                        : (isRecorded == true
+                        : (isRecorded)
                             ? CupertinoIcons.play_fill
-                            : CupertinoIcons.mic_solid),
+                            : CupertinoIcons.mic_fill,
                     color: Colors.white,
                     size: 75),
               ),
@@ -181,29 +192,44 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 textDirection: TextDirection.rtl,
                 children: [
-                  Container(
-                    width: 180,
-                    height: 55,
-                    decoration: const BoxDecoration(
-                      color: Color(0xff319F43),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(50),
-                        bottomLeft: Radius.circular(50),
-                      ),
-                    ),
-                    child: const Icon(CupertinoIcons.checkmark_alt,
-                        color: Colors.white, size: 47),
-                  ),
-                  Container(
-                    width: 55,
-                    height: 55,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffE33629),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: const Icon(CupertinoIcons.restart,
-                        color: Colors.white, size: 28),
-                  ),
+                  isRecorded
+                      ? Container(
+                          width: 180,
+                          height: 55,
+                          decoration: const BoxDecoration(
+                            color: Color(0xff319F43),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(50),
+                              bottomLeft: Radius.circular(50),
+                            ),
+                          ),
+                          child: const Icon(
+                            CupertinoIcons.checkmark_alt,
+                            color: Colors.white,
+                            size: 47,
+                          ),
+                        )
+                      : Container(),
+                  isPlaying
+                      ? InkWell(
+                    onTap: (){
+                      isRecorded = false;
+                      isPlaying = false;
+                      _containerColor = const Color(0xff00caed);
+                      setState(() {});
+                    },
+                        child: Container(
+                            width: 55,
+                            height: 55,
+                            decoration: BoxDecoration(
+                              color: const Color(0xffE33629),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: const Icon(CupertinoIcons.restart,
+                                color: Colors.white, size: 28),
+                          ),
+                      )
+                      : Container(),
                 ],
               ),
             )
