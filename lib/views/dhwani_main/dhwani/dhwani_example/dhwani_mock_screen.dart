@@ -1,5 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -31,6 +32,26 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
     recorder.closeRecorder();
     super.dispose();
   }
+
+  // Future<void> sendPostRequest() async {
+  //   var response = await http.post(apiUrl,
+  //       headers: {"Content-Type": "application/json"},
+  //       body: jsonEncode({
+  //         "title": "ye title h",
+  //         "body": "ye body h",
+  //         "userId": 1,
+  //       }));
+  //
+  //   if (response.statusCode == 201) {
+  //     Scaffold.of(context).showSnackBar( const SnackBar(
+  //       content: Text("Post created successfully!"),
+  //     ));
+  //   } else {
+  //     Scaffold.of(context).showSnackBar(const SnackBar(
+  //       content: Text("Failed to create post!"),
+  //     ));
+  //   }
+  // }
 
   Future<void> initRecorder() async {
     final status = await Permission.microphone.request();
