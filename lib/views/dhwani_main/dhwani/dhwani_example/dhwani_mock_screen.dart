@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,14 @@ import 'package:flutter_sound/flutter_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:audioplayers/audioplayers.dart';
 
+import '../../../../model/dhwani.dart';
+
 class DhwaniMockScreen extends StatefulWidget {
-  const DhwaniMockScreen({super.key});
+  DhwaniMockScreen({super.key, required this.dhwani ,required this.alphabets, required this.mockType});
+
+  final List<DhwaniClass> alphabets;
+  final List<DhwaniElement> dhwani;
+  final String mockType;
 
   @override
   State<DhwaniMockScreen> createState() => DhwaniMockScreenState();
@@ -17,13 +24,55 @@ class DhwaniMockScreen extends StatefulWidget {
 class DhwaniMockScreenState extends State<DhwaniMockScreen> {
   final recorder = FlutterSoundRecorder();
   final audioPlayer = AudioPlayer();
+  int examplesLength = 28;
   bool isRecorded = false;
   bool isPlaying = false;
+  int currentExample = 0;
   Color _containerColor = const Color(0xff00CAED);
+  List <Example> selectedExamples = [];
+
+  Future<void> playAudioFromUrl(String url) async {
+    await audioPlayer.play(UrlSource(url));
+  }
+
+  void selectExamples() {
+    if(widget.mockType == "categorised")
+      {
+        for (var alphabet in widget.alphabets)
+        {
+          for(var example in alphabet.examples)
+          {
+            selectedExamples.add(example);
+          }
+        }
+      }
+    else{
+      for(var dhwanis in widget.dhwani)
+        {
+          for (var alphabet in dhwanis.dhwanis)
+          {
+            for(var example in alphabet.examples)
+            {
+              selectedExamples.add(example);
+            }
+          }
+        }
+    }
+    if(widget.mockType == "categorised")
+      {
+        examplesLength = 15;
+      }
+    selectedExamples.shuffle(Random());
+    if(selectedExamples.length > examplesLength)
+      {
+        selectedExamples = selectedExamples.sublist(0, examplesLength);
+      }
+  }
 
   @override
   void initState() {
     super.initState();
+    selectExamples();
     initRecorder();
   }
 
@@ -32,26 +81,6 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
     recorder.closeRecorder();
     super.dispose();
   }
-
-  // Future<void> sendPostRequest() async {
-  //   var response = await http.post(apiUrl,
-  //       headers: {"Content-Type": "application/json"},
-  //       body: jsonEncode({
-  //         "title": "ye title h",
-  //         "body": "ye body h",
-  //         "userId": 1,
-  //       }));
-  //
-  //   if (response.statusCode == 201) {
-  //     Scaffold.of(context).showSnackBar( const SnackBar(
-  //       content: Text("Post created successfully!"),
-  //     ));
-  //   } else {
-  //     Scaffold.of(context).showSnackBar(const SnackBar(
-  //       content: Text("Failed to create post!"),
-  //     ));
-  //   }
-  // }
 
   Future<void> initRecorder() async {
     final status = await Permission.microphone.request();
@@ -87,12 +116,12 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
         bottom: false,
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 25),
+            Padding(
+              padding: const EdgeInsets.only(top: 25),
               child: Center(
                 child: Text(
-                  "1/20",
-                  style: TextStyle(
+                  "${currentExample+1}/${selectedExamples.length}",
+                  style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 23,
                     color: Colors.black,
@@ -110,20 +139,21 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
                     width: 0.5,
                   ),
                 ),
-                child: const LinearProgressIndicator(
-                  borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  value: 0.1,
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xff319F43)),
+                child: LinearProgressIndicator(
+                  borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+                  value: ((currentExample+1)/selectedExamples.length),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xff319F43)),
                   backgroundColor: Colors.white,
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 50.0),
-              child: Image(
-                image: const AssetImage("assets/chand2.png"),
-                width: screenWidth - 130,
-                fit: BoxFit.fill,
+              child: Image.network(
+                selectedExamples[currentExample].image,
+                width: screenWidth - 100,
+                height: 300,
+                fit: BoxFit.contain,
               ),
             ),
             const SizedBox(height: 60),
@@ -132,31 +162,36 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "चाँद",
-                    style: TextStyle(
+                  Text(
+                    selectedExamples[currentExample].name,
+                    style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 60,
                       fontFamily: "NotoSansDevanagari",
                       color: Color(0xff04434E),
                     ),
                   ),
-                  Container(
-                    width: 55,
-                    height: 55,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0xff04434E),
-                          offset: Offset(4, 4),
-                          spreadRadius: 1,
-                        )
-                      ],
+                  InkWell(
+                    onTap: () {
+                      playAudioFromUrl(selectedExamples[currentExample].sound);
+                    },
+                    child: Container(
+                      width: 55,
+                      height: 55,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xff04434E),
+                            offset: Offset(4, 4),
+                            spreadRadius: 1,
+                          )
+                        ],
+                      ),
+                      child: const Icon(CupertinoIcons.speaker_2_fill,
+                          color: Color(0xff093955), size: 37),
                     ),
-                    child: const Icon(CupertinoIcons.speaker_2_fill,
-                        color: Color(0xff093955), size: 37),
                   )
                 ],
               ),
@@ -214,22 +249,31 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
                 textDirection: TextDirection.rtl,
                 children: [
                   isRecorded
-                      ? Container(
-                          width: 180,
-                          height: 55,
-                          decoration: const BoxDecoration(
-                            color: Color(0xff319F43),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(50),
-                              bottomLeft: Radius.circular(50),
+                      ? InkWell(
+                        onTap: (){
+                          currentExample+=1;
+                          isRecorded = false;
+                          isPlaying = false;
+                          _containerColor = const Color(0xff00caed);
+                          setState(() {});
+                        },
+                        child: Container(
+                            width: 180,
+                            height: 55,
+                            decoration: const BoxDecoration(
+                              color: Color(0xff319F43),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50),
+                                bottomLeft: Radius.circular(50),
+                              ),
+                            ),
+                            child: const Icon(
+                              CupertinoIcons.checkmark_alt,
+                              color: Colors.white,
+                              size: 47,
                             ),
                           ),
-                          child: const Icon(
-                            CupertinoIcons.checkmark_alt,
-                            color: Colors.white,
-                            size: 47,
-                          ),
-                        )
+                      )
                       : Container(),
                   isPlaying
                       ? InkWell(

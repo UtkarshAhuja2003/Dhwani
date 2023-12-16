@@ -22,11 +22,11 @@ GoRouter router = GoRouter(routes: [
     path: '/dhwaniscreen',
     builder: (context, state) => const DhwaniScreen(),
   ),
-  GoRoute(
-    name: 'Mock Test',
-    path: '/mocktest',
-    builder: (context, state) => const DhwaniMockScreen(),
-  ),
+  // GoRoute(
+  //   name: 'Mock Test',
+  //   path: '/mocktest',
+  //   builder: (context, state) => const (),
+  // ),
   GoRoute(
     name: 'Onboarding',
     path: '/onboarding',

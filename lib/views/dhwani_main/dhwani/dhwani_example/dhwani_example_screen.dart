@@ -156,7 +156,7 @@ class Button extends StatelessWidget {
               (buttonType=="dynamic")?DhwaniExampleDetailScreen(
                   alphabet : widget.alphabet[index]
               )
-                  :const DhwaniMockScreen()
+                  :DhwaniMockScreen(dhwani: const [], alphabets: widget.alphabet,mockType: "categorised",)
           )
       );
     },
