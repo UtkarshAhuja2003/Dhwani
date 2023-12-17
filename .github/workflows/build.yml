@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v2
         with: 
-          distributions: "zulu"
+          distribution: "zulu"
           java-version: "11.x"
       - uses: subosito/flutter-action@main
         with:
