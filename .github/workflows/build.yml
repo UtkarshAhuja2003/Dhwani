@@ -19,7 +19,7 @@ jobs:
       - run: flutter pub get
       - name: flutter_generate_apk
         run: flutter build apk
-      - uses: actions/upload-artifacts@v3
+      - uses: actions/upload-artifact@v3
         with: 
           name: release-builds
           path: build/app/outputs/flutter-apk/
