@@ -1,43 +1,71 @@
+import 'package:carbon_icons/carbon_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomNavbar extends StatelessWidget {
-  const BottomNavbar({super.key});
+  const BottomNavbar({super.key,required this.screen});
+
+  final String screen;
 
   @override
   Widget build(BuildContext context) {
-    return const ClipRRect(
-      borderRadius:  BorderRadius.only(
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(30),
         topRight: Radius.circular(30),
       ),
       child: BottomAppBar(
         height: 57,
-        color:  Color(0xffE6FAFD),
-        elevation: 0, // Optional: Set elevation to 0 to remove shadow
+        color: const Color(0xffE6FAFD),
+        elevation: 0,
         child: SizedBox(
           height: 50,
           child:  Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Icon(
-                Icons.home,
-                size: 40,
-                color: Color(0xff0CC0DF),
+              InkWell(
+                onTap: (){
+                  if(screen!="Home")
+                  {
+                    GoRouter.of(context).pushNamed("Home Screen");
+                  }
+                },
+                child: Icon(
+                  Icons.home,
+                  size: 40,
+                  color: (screen=="Home")?const Color(0xff04434E):const Color(0xff0CC0DF),
+                ),
               ),
-              Icon(
-                Icons.home,
-                size: 40,
-                color: Color(0xff0CC0DF),
+              InkWell(
+                onTap: (){
+                  if(screen!="Dhwani")
+                  {
+                    GoRouter.of(context).pushNamed("Dhwani Screen");
+                  }
+                },
+                child: (screen=="Dhwani")?Image(image: AssetImage("assets/dhwaninavdark.png")):Image(image: AssetImage("assets/dhwaninavlight.png"))
               ),
-              Icon(
-                Icons.home,
-                size: 40,
-                color: Color(0xff0CC0DF),
+              InkWell(
+                onTap: (){
+                  if(screen!="Mock")
+                    {
+                      GoRouter.of(context).pushNamed("Mock Test");
+                    }
+                },
+                child:  (screen=="Mock")?Image(image: AssetImage("assets/mocknavdark.png")):Image(image: AssetImage("assets/mocknavlight.png")),
               ),
-              Icon(
-                Icons.home,
-                size: 40,
-                color: Color(0xff0CC0DF),
+              InkWell(
+                onTap: (){
+                  if(screen!="Profile")
+                  {
+                    GoRouter.of(context).pushNamed("Profile");
+                  }
+                },
+                child: Icon(
+                  CarbonIcons.user_filled,
+                  size: 34,
+                  color:(screen=="Profile")?const Color(0xff04434E):const Color(0xff0CC0DF),
+                ),
               ),
             ],
           ),

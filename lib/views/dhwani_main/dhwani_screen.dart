@@ -156,7 +156,7 @@ class _DhwaniScreenState extends State<DhwaniScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: const BottomNavbar(),
+      bottomNavigationBar: const BottomNavbar(screen: "Dhwani",),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:dhwani/views/home_view.dart';
+import 'package:dhwani/views/home/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../routes/app_route_config.dart';
