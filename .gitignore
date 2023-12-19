@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+assets/googleservice.json
 migrate_working_dir/
 
 # IntelliJ related

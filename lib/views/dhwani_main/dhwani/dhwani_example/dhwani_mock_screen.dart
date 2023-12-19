@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
+import 'package:google_speech/google_speech.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
@@ -10,12 +10,15 @@ import 'package:audioplayers/audioplayers.dart';
 
 import '../../../../model/dhwani.dart';
 
+
+
 class DhwaniMockScreen extends StatefulWidget {
   DhwaniMockScreen({super.key, required this.dhwani ,required this.alphabets, required this.mockType});
 
   final List<DhwaniClass> alphabets;
   final List<DhwaniElement> dhwani;
   final String mockType;
+
 
   @override
   State<DhwaniMockScreen> createState() => DhwaniMockScreenState();
@@ -30,6 +33,7 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
   int currentExample = 0;
   Color _containerColor = const Color(0xff00CAED);
   List <Example> selectedExamples = [];
+
 
   Future<void> playAudioFromUrl(String url) async {
     await audioPlayer.play(UrlSource(url));
@@ -68,11 +72,27 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
         selectedExamples = selectedExamples.sublist(0, examplesLength);
       }
   }
-
+  var speechToText;
   @override
   void initState() {
     super.initState();
     selectExamples();
+    final serviceAccount = ServiceAccount.fromString(r'''{
+  "type": "service_account",
+  "project_id": "alert-almanac-408515",
+  "private_key_id": "d60a068c171d30bf62fd9060350854fcf7978d21",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCy7P/C3ULP8fcH\n5c90IDuHIkqMf3IF7xOthUzwz/y5TohHCcnC3zcnqAkIkWzyvcjorJ9Ph6ta1NaH\nfrXeEzaJHl9eMERaMlytY2Yh+u44cjGVE0JMiNB3CwAr+SJCP2EF8GC6q+pJS1m4\nbdNQaNYHfH0T0PQ+6r/sw6aS6kZfap404X6IY91CJdh5T08VEr7VmfzR8BUbCDEk\nwTXUFku9FbXKC2dmGs3MEk4/7V/su/Ob8LvA3BLxRdNf3psrCIy6KtqzvO2lUOUg\nDTOvvGnYqupxytWfy8CwOKg4t2ovmWqqLni5uBm6LkiY1i+/FDBm350TQtx86qF3\nlcUPsClrAgMBAAECggEALXdu+If8GdZNJTsfD82/ArRSiEg8Y8igUfgtGIZpnHcZ\nxx90HypUnCWlggFeU4KpgoKXCwEZKIAsMYsf0NpGAervZgJS5C6nAUJgaiMXFM3j\nzpNxxfwAKTfo58OrknUDhRxToCveYZidqHF0AJtbQ9S8/eObpT9G3PXMpsmUb1s9\nJhghI0x330i6lRv/uMVLo0a4ODubLmJe2ixrrzWNYXBjF+Ay576laNax/OdAFP8S\nt5tzuTlxya7WXrtuQT1F96AuFuT1qCTizG+IlSdDpUKF6+iA1GdFqdyBkB9XoIG/\ntikeg3K43sbfP1Ib0QWvAu0o4YlHmy2l6wQjmYXc1QKBgQD1V9MDYcQo/4cQweGu\nuuK8rZjChpTosMw4HR6FgPZvM37FGU0zp94IO2h+cEwDoHsU7L9LQkMKQhGj3Wda\nD6YwyBDXhnd4R+JBZhVoTPSDobr9uEuAsOzi+ZgHufTFiJZ+/tEZ8nnsffvlSSnD\na8+n2n47FR4g8R7WGWbS3fEDjwKBgQC6sqALRA1b0/44W79c12S0njn5Wv/+tL/8\nMCjzhaQw8i9sdn5RoJ9GKTcB8CdztLJxk+mjhQdIYnTc8dz23VWJHklc7Qu2U3hq\nyHdp6nkewMLhrE8qzKp9/S7X7s05Gn8d0JFjCwPZkoAAY3WuSvWFIlFSZQrKOCzm\nFQi+mGEeZQKBgG1gTulmD457hJpa5SMBnA2jksO+PeqSzyiBCtdXzAV9PpneEsXh\no6Gl4orjw2+mftiwRwPlMYAEPlsAXJARA/UhbCi5gM91tI+VVBvgmu2ID5YHMFna\nBnGV9koTg+UAZJ+POGdJ60McU00/1ceSa8wYI0hxvLHQ7P9j6aw+V7FPAoGBAIAS\nGuG/jB5rHWBR58LrawTP6dsZRrTWD0ETVHRBP/HnoQqZemvKcJgzm61zrcycrzBk\nlAh9MBLCn4IVVEvwZ0XJhe/+GGO5fMhbvjblBrNG7ijbB+/HOEl3DdRI13UNrRep\nxKIZo0l0SuR5Vff7KdNrSDfqYm13/azTzwzYAP9VAoGBALb+4ycrQO/P8JXxc11G\nOUmkJ1k1AK1gaNMBrxYY9pyRFtT8Mcxe2zoFUk6ezJYKwVvwxgQGRdrVsFPoOovR\n+dc9CdqFzWgUZury45OpLGYK/8R9ILfAMErUjwv7aFVM8Uvp5469eDuaEzHGdDDN\nu5cnC51y4q0n1EBJoRa/suuI\n-----END PRIVATE KEY-----\n",
+  "client_email": "dhwani@alert-almanac-408515.iam.gserviceaccount.com",
+  "client_id": "110602915677464936842",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dhwani%40alert-almanac-408515.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+''');
+    speechToText = SpeechToText.viaServiceAccount(serviceAccount);
+
     initRecorder();
   }
 
@@ -81,8 +101,14 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
     recorder.closeRecorder();
     super.dispose();
   }
-
+  var config;
   Future<void> initRecorder() async {
+     config = RecognitionConfig(
+        encoding: AudioEncoding.LINEAR16,
+        model: RecognitionModel.basic,
+        enableAutomaticPunctuation: true,
+        sampleRateHertz: 16000,
+        languageCode: 'en-US');
     final status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
       throw "Microphone permission not granted";
@@ -92,7 +118,7 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
   Future record() async {
     await recorder.openRecorder();
     await recorder.startRecorder(toFile: 'audio');
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 3));
     await stop();
     setState(() {
       isRecorded = true;
@@ -100,12 +126,20 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
   }
 
   late File audioFile;
+  var response="h";
   Future stop() async {
     setState(() {
       _containerColor = const Color(0xff00caed);
     });
     final audioPath = await recorder.stopRecorder();
     audioFile = File(audioPath!);
+
+    Future<List<int>> _getAudioContent() async {
+      return File(audioPath).readAsBytesSync().toList();
+    }
+
+    final audio = await _getAudioContent();
+    response = await speechToText.recognize(config, audio);
   }
 
   @override
@@ -157,6 +191,10 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
               ),
             ),
             const SizedBox(height: 60),
+
+            Text(response,style: TextStyle(
+              color: Colors.black
+            ),),
             Padding(
               padding: const EdgeInsets.only(left: 50, right: 50),
               child: Row(
