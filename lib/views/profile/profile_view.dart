@@ -29,20 +29,16 @@ class ProfileView extends ConsumerWidget {
                   decoration: const BoxDecoration(
                     color: Color(0xffE6F4F1),
                   ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(),
-                      Text(
-                        "Profile",
-                        style: TextStyle(
-                            fontSize: 30,
-                            color: Color(0xff04434E),
-                            fontWeight: FontWeight.w700),
+                  child: 
+                      const Center(
+                        child:  Text(
+                          "प्रोफ़ाइल",
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Color(0xff04434E),
+                              fontWeight: FontWeight.w700),
+                        ),
                       ),
-                      Icon(CarbonIcons.settings, color: Color(0xff04434E))
-                    ],
-                  ),
                 ),
                 Container(
                   color: const Color(0xff04434E),
@@ -102,7 +98,7 @@ class ProfileView extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("Statistics",
+                          const Text("आंकड़े",
                               style: TextStyle(
                                   letterSpacing: 0.9,
                                   fontSize: 25,
@@ -197,19 +193,73 @@ class ProfileView extends ConsumerWidget {
                 )
               ],
             ),
-          ))),
+          ))
+          ),
+          appBar: AppBar(backgroundColor: const Color(0xffE6F4F1),),
+          endDrawer: Drawer(
+            child: Column(
+              children: [
+                const SizedBox(height: 40),
+                  const Text(
+                            "सहायता और समर्थन",
+                          
+                            style: TextStyle(
+                              
+                                fontSize: 30,
+                                color: Color(0xff04434E),
+                                fontWeight: FontWeight.w700),
+                          ),
+                          Container(
+                  color: const Color(0xff04434E),
+                  width: screenWidth,
+                  height: 2,
+                ),
+                          const Text(
+                          "गोपनीयता नीति",
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Color(0xff04434E),
+                              fontWeight: FontWeight.w700),
+                        ),
+                        Container(
+                  color: const Color(0xff04434E),
+                  width: screenWidth,
+                  height: 2,
+                ),
+                        const Text(
+                          "नियम और शर्तें",
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Color(0xff04434E),
+                              fontWeight: FontWeight.w700),
+                        ),
+                        Container(
+                  color: const Color(0xff04434E),
+                  width: screenWidth,
+                  height: 2,
+                ),
+                        const Text(
+                          "ऐप के नियम",
+                          style: TextStyle(
+                              fontSize: 30,
+                              color: Color(0xff04434E),
+                              fontWeight: FontWeight.w700),
+                        ),
+              ],
+            ),
+          ),
     );
   }
 }
 
 class StatsContainer extends StatelessWidget {
-  StatsContainer({Key? key, required this.type});
+  StatsContainer({super.key, required this.type});
   String type;
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 90,
-      width: 140,
+      width: 160,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
@@ -219,7 +269,7 @@ class StatsContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(5),
         child: Row(
           children: [
             Image(
@@ -236,8 +286,14 @@ class StatsContainer extends StatelessWidget {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("5",
-                        style: TextStyle(
+                    Text( (type == "Streak")
+                            ? "5"
+                            : (type == "Module")
+                                ? "10"
+                                : (type == "Time")
+                                    ? "3"
+                                    : "3",
+                        style: const TextStyle(
                             letterSpacing: 0.9,
                             fontSize: 20,
                             color: Color(0xff0CC0DF),
@@ -267,7 +323,7 @@ class StatsContainer extends StatelessWidget {
 
 
 class BadgeContainer extends StatelessWidget {
-  BadgeContainer({Key? key, required this.type});
+  BadgeContainer({super.key, Key, required this.type});
   String type;
   @override
   Widget build(BuildContext context) {

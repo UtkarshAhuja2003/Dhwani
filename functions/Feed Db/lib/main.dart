@@ -35,17 +35,15 @@ void main() async {
       final [soundType, description, alpha, exType, exName, alphaDesc] =
           lines[i].split(",");
 
-      if (i == 0 || soundType != lines[i - 1].split(",").first) {
-        if (i != 0) {
-          await db.updateDocument(
-              databaseId: databaseId,
-              collectionId: soundCollection,
-              documentId: soundDocumentId,
-              data: {"alphabet_ids": alphabetIds});
-          alphabetIds.clear();
-          log("Updated Document $soundDocumentId");
-        }
-
+      if (i != 0 && soundType != lines[i - 1].split(",").first) {
+        await db.updateDocument(
+            databaseId: databaseId,
+            collectionId: soundCollection,
+            documentId: soundDocumentId,
+            data: {"alphabet_ids": alphabetIds});
+        alphabetIds.clear();
+        log("Updated Document $soundDocumentId");
+      } else {
         soundDocumentId = await db.createDocument(
             databaseId: databaseId,
             collectionId: soundCollection,
@@ -57,17 +55,15 @@ void main() async {
         log("Inserted Document $soundDocumentId");
       }
 
-      if (i == 0 || alpha != lines[i - 1].split(",")[2]) {
-        if (i != 0) {
-          await db.updateDocument(
-              databaseId: databaseId,
-              collectionId: alphabetCollection,
-              documentId: alphabetDocumentId,
-              data: {"example_ids": exampleIds});
-          exampleIds.clear();
-          log("Updated Document $alphabetDocumentId");
-        }
-
+      if (i != 0 && alpha != lines[i - 1].split(",")[2]) {
+        await db.updateDocument(
+            databaseId: databaseId,
+            collectionId: alphabetCollection,
+            documentId: alphabetDocumentId,
+            data: {"example_ids": exampleIds});
+        exampleIds.clear();
+        log("Updated Document $alphabetDocumentId");
+      } else {
         Directory alphaAudioDir = Directory("alphaAudios");
         String? alphaAudioId;
         if (await alphaAudioDir.exists()) {
@@ -95,56 +91,56 @@ void main() async {
               "sound_id": alphaAudioId
             }).then((value) => value.$id);
         alphabetIds.add(alphabetDocumentId);
-
-        Directory dir = Directory("images");
-        String? imgId;
-        if (await dir.exists()) {
-          for (var data in dir.listSync()) {
-            final fileName = data.path.split('images\\').last;
-            if (fileName.split(".svg").first.contains(exName)) {
-              imgId = await storage
-                  .createFile(
-                      bucketId: "exampleimage",
-                      fileId: ID.unique(),
-                      file: InputFile.fromPath(
-                          path: data.path,
-                          filename: fileName))
-                  .then((value) => value.$id);
-            }
-          }
-        }
-
-        Directory audioDir = Directory("audio");
-        String? audioId;
-        if (await audioDir.exists()) {
-          for (var data in audioDir.listSync()) {
-            final fileName = data.path.split('audio\\').last;
-            if (fileName.split(".mp3").first.contains(exName)) {
-              audioId = await storage
-                  .createFile(
-                      bucketId: "examplesound",
-                      fileId: ID.unique(),
-                      file: InputFile.fromPath(
-                          path: data.path, filename: fileName))
-                  .then((value) => value.$id);
-            }
-          }
-        }
-        final examplesData = await db.createDocument(
-            databaseId: databaseId,
-            collectionId: exampleCollection,
-            documentId: ID.unique(),
-            data: {
-              "name": exName,
-              "type": exType.toUpperCase(),
-              "img_id": imgId,
-              "sound_id": audioId
-            });
-        exampleIds.add(examplesData.$id);
-        log("Updated Example Document ${examplesData.$id}");
       }
+      Directory dir = Directory("images");
+      String? imgId;
+      if (await dir.exists()) {
+        for (var data in dir.listSync()) {
+          final fileName = data.path.split('images\\').last;
+          if (fileName.split(".svg").first.contains(exName)) {
+            imgId = await storage
+                .createFile(
+                    bucketId: "exampleimage",
+                    fileId: ID.unique(),
+                    file:
+                        InputFile.fromPath(path: data.path, filename: fileName))
+                .then((value) => value.$id);
+          }
+        }
+      }
+
+      Directory audioDir = Directory("audio");
+      String? audioId;
+      if (await audioDir.exists()) {
+        for (var data in audioDir.listSync()) {
+          final fileName = data.path.split('audio\\').last;
+          if (fileName.split(".mp3").first.contains(exName)) {
+            audioId = await storage
+                .createFile(
+                    bucketId: "examplesound",
+                    fileId: ID.unique(),
+                    file:
+                        InputFile.fromPath(path: data.path, filename: fileName))
+                .then((value) => value.$id);
+          }
+        }
+      }
+      final examplesData = await db.createDocument(
+          databaseId: databaseId,
+          collectionId: exampleCollection,
+          documentId: ID.unique(),
+          data: {
+            "name": exName,
+            "type": exType.toUpperCase(),
+            "img_id": imgId,
+            "sound_id": audioId
+          });
+      exampleIds.add(examplesData.$id);
+      log("Updated Example Document ${examplesData.$id}");
+
       // You can log messages to the console
       print('All Done');
+      // await Future.delayed(Duration(seconds: 3));
     }
 
     // res.json() is a handy helper for sending JSON

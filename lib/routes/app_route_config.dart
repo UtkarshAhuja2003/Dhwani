@@ -1,6 +1,7 @@
 import 'package:dhwani/main.dart';
 import 'package:dhwani/views/auth/signup_view.dart';
 import 'package:dhwani/views/home/home_view.dart';
+import 'package:dhwani/views/home_views/LandingScreen.dart';
 import 'package:dhwani/views/mock/mock_view.dart';
 import 'package:dhwani/views/onboarding/onboarding_view.dart';
 import 'package:dhwani/views/profile/profile_view.dart';
@@ -54,17 +55,22 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ),
             routes: [
               GoRoute(
+                name: 'Game',
+                path: LandingScreen.routename,
+                builder: (context, state) => const LandingScreen(),
+              ),
+              GoRoute(
                 name: 'Dhwani Screen',
                 path: DhwaniScreen.routename,
                 builder: (context, state) =>
                     const DhwaniScreen(key: ValueKey(#dhwani)),
               ),
-              GoRoute(
-                name: 'Mock Test',
-                path: MockView.routename,
-                builder: (context, state) =>
-                    const MockView(key: ValueKey(#mocktest)),
-              ),
+              // GoRoute(
+              //   name: 'Mock Test',
+              //   path: MockView.routename,
+              //   builder: (context, state) =>
+              //       const MockView(key: ValueKey(#mocktest)),
+              // ),
               GoRoute(
                 name: 'Profile',
                 path: ProfileView.routename,
@@ -72,7 +78,15 @@ final routerProvider = Provider<GoRouter>((ref) {
                   return const ProfileView(key: ValueKey(#profile));
                 },
               ),
+              // GoRoute(
+              //   name: 'Mock',
+              //   path: MockView.routename,
+              //   builder: (context, state) {
+              //     return const MockView(key: ValueKey(#profile));
+              //   },
+              // ),
             ]),
+            
         GoRoute(
           name: 'Login',
           path: LoginView.routename,
@@ -88,5 +102,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           path: OnboardingScreen.routename,
           builder: (context, state) => const OnboardingScreen(),
         ),
+
       ]);
 });

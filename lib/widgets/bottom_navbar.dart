@@ -1,7 +1,10 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:dhwani/routes/app_route_config.dart';
 import 'package:dhwani/views/dhwani_main/dhwani_screen.dart';
+import 'package:dhwani/views/home/home_view.dart';
+import 'package:dhwani/views/home_views/LandingScreen.dart';
 import 'package:dhwani/views/mock/mock_view.dart';
+import 'package:dhwani/views/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +33,7 @@ class BottomNavbar extends ConsumerWidget {
               InkWell(
                 onTap: () {
                   if (index != 0) {
-                    ref.read(routerProvider).go(DhwaniScreen.routename);
+                    ref.read(routerProvider).go(LandingScreen.routename);
                   }
                 },
                 child: Icon(
@@ -55,7 +58,7 @@ class BottomNavbar extends ConsumerWidget {
               InkWell(
                 onTap: () {
                   if (index != 1) {
-                    ref.read(routerProvider).go(MockView.routename);
+                    ref.read(routerProvider).go(DhwaniScreen.routename);
                   }
                 },
                 child: (index == 1)
@@ -65,14 +68,24 @@ class BottomNavbar extends ConsumerWidget {
               InkWell(
                 onTap: () {
                   if (index != 2) {
-                    ref.read(routerProvider).go(DhwaniScreen.routename);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DhwaniMockView()));
                   }
+                },
+                child:const Image(image: AssetImage("assets/examimage.png"))
+              ),
+              InkWell(
+                onTap: () {
+                  if (index != 3) {
+                    ref.read(routerProvider).go(ProfileView.routename);
                   }
-              ,
+                  },
                 child: Icon(
                   CarbonIcons.user_filled,
                   size: 34,
-                  color: (index == 2)
+                  color: (index == 3)
                       ? const Color(0xff04434E)
                       : const Color(0xff0CC0DF),
                 ),

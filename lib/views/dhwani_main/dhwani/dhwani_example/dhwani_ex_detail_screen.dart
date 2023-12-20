@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dhwani/services/db_service.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +14,10 @@ class DhwaniExampleDetailScreen extends ConsumerWidget {
 
   final Alphabets alphabet;
 
-  final audioPlayer = AudioPlayer();
-  Future<void> playAudioFromUrl(String url) async {
-    await audioPlayer.play(UrlSource(url));
+  final audioPlayer = AudioPlayer()..setPlaybackRate(0.5);
+
+  Future<void> playAudioFromUrl(Uint8List url) async {
+    await audioPlayer.play(BytesSource(url));
   }
 
   @override
@@ -96,8 +100,10 @@ class DhwaniExampleDetailScreen extends ConsumerWidget {
                     height: 20,
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      playAudioFromUrl(alphabet.soundId);
+                    onPressed: () async {
+                      await playAudioFromUrl(await ref
+                          .watch(dbserviceProvider)
+                          .getAlphabetSound(id: alphabet.soundId));
                     },
                     style: ElevatedButton.styleFrom(
                       elevation: 10,
@@ -149,36 +155,43 @@ class DhwaniExampleDetailScreen extends ConsumerWidget {
                                           children: [
                                             ref
                                                 .watch(exampleImageProvider(
-                                                    data.id))
+                                                    data.imageId))
                                                 .when(
                                                     data: (data) {
-                                                      return Stack(
-                                                        children: [
-                                                          Container(
-                                                            width: 80,
-                                                            height: 80,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10), // Adjust the value for the desired roundness
-                                                            ),
-                                                          ),
-                                                          Positioned.fill(
-                                                            child: Center(
-                                                                child: SvgPicture
-                                                                    .memory(
-                                                                        data)),
-                                                          ),
-                                                        ],
-                                                      );
+                                                      //   return Stack(
+                                                      //     children: [
+                                                      //       Container(
+                                                      //         width: 80,
+                                                      //         height: 80,
+                                                      //         decoration:
+                                                      //             BoxDecoration(
+                                                      //           color:
+                                                      //               Colors.white,
+                                                      //           borderRadius:
+                                                      //               BorderRadius
+                                                      //                   .circular(
+                                                      //                       10), // Adjust the value for the desired roundness
+                                                      //         ),
+                                                      //       ),
+                                                      //       Positioned.fill(
+                                                      //         child: Center(
+                                                      //             child: SvgPicture
+                                                      //                 .memory(
+                                                      //                     data)),
+                                                      //       ),
+                                                      //     ],
+                                                      //   );
+                                                      return const SizedBox
+                                                          .shrink();
                                                     },
-                                                    error: (error,
-                                                            stackTrace) =>
-                                                        Text(error.toString()),
+                                                    error: (error, stackTrace) {
+                                                      log("Something went wrong",
+                                                          error: error,
+                                                          stackTrace:
+                                                              stackTrace);
+                                                      return const SizedBox
+                                                          .shrink();
+                                                    },
                                                     loading: () =>
                                                         const SizedBox
                                                             .shrink()),
@@ -203,9 +216,13 @@ class DhwaniExampleDetailScreen extends ConsumerWidget {
                                                       ),
                                                     ),
                                                     InkWell(
-                                                      onTap: () {
-                                                        playAudioFromUrl(
-                                                            data.soundId);
+                                                      onTap: () async {
+                                                        await playAudioFromUrl(await ref
+                                                            .read(
+                                                                dbserviceProvider)
+                                                            .getExampleSound(
+                                                                id: data
+                                                                    .soundId));
                                                       },
                                                       child: const Image(
                                                         image: AssetImage(

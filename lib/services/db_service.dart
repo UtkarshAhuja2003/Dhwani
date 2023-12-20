@@ -42,6 +42,13 @@ final exampleProvider =
 });
 
 
+final soundProvider =
+    FutureProvider.family<Uint8List, String>((ref, id) async {
+  final db = ref.watch(dbserviceProvider);
+  return db.getExampleSound(id:id);
+});
+
+
 class DatabaseService {
   final Client _client;
   late final Databases _databases;

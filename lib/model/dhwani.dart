@@ -65,7 +65,7 @@ class DhwaniClass {
   String name;
   String description;
   String sound;
-  List<Example> examples;
+  List<DhwaniExample> examples;
 
   DhwaniClass({
     required this.name,
@@ -78,8 +78,8 @@ class DhwaniClass {
         name: json["name"],
         description: json["description"],
         sound: json["sound"],
-        examples: List<Example>.from(
-            json["examples"].map((x) => Example.fromJson(x))),
+        examples: List<DhwaniExample>.from(
+            json["examples"].map((x) => DhwaniExample.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -87,6 +87,32 @@ class DhwaniClass {
         "description": description,
         "sound": sound,
         "examples": List<dynamic>.from(examples.map((x) => x.toJson())),
+      };
+}
+
+
+
+class DhwaniExample {
+    String name;
+    String image;
+    String sound;
+
+    DhwaniExample({
+        required this.name,
+        required this.image,
+        required this.sound,
+    });
+
+    factory DhwaniExample.fromJson(Map<String, dynamic> json) => DhwaniExample(
+        name: json["name"],
+        image: json["image"],
+        sound: json["sound"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "name": name,
+        "image": image,
+        "sound":sound,
       };
 }
 
@@ -304,7 +330,7 @@ class Alphabets {
       name: map['name'] as String,
       desc: map['description'] as String,
       soundId: map['sound_id'] as String,
-      exampleIds: List<String>.from((map['example_ids'] as List<String>)),
+      exampleIds: List<String>.from((map['example_ids'])),
     );
   }
 
