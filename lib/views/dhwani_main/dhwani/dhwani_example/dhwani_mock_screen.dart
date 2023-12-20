@@ -1,17 +1,19 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
+import 'dart:developer' as devTools;
 import 'package:flutter/services.dart';
 import 'package:google_speech/google_speech.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:audioplayers/audioplayers.dart';
-
+// import 'package:audioplayers/audioplayers.dart';
 import '../../../../model/dhwani.dart';
 
 class DhwaniMockScreen extends StatefulWidget {
-  const DhwaniMockScreen(
+  DhwaniMockScreen(
       {super.key,
       required this.dhwani,
       required this.alphabets,
@@ -26,18 +28,19 @@ class DhwaniMockScreen extends StatefulWidget {
 }
 
 class DhwaniMockScreenState extends State<DhwaniMockScreen> {
-  final recorder = FlutterSoundRecorder();
-  final audioPlayer = AudioPlayer();
+  final audioPlayer = FlutterSoundPlayer();
   int examplesLength = 28;
   bool isRecorded = false;
   bool isPlaying = false;
   int currentExample = 0;
   Color _containerColor = const Color(0xff00CAED);
   List<Example> selectedExamples = [];
+  var file;
+  File? audio;
 
-  Future<void> playAudioFromUrl(String url) async {
-    await audioPlayer.play(UrlSource(url));
-  }
+  // Future<void> playAudioFromUrl(String url) async {
+  //   await audioPlayer.play(UrlSource(url));
+  // }
 
   void selectExamples() {
     if (widget.mockType == "categorised") {
@@ -65,6 +68,7 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
   }
 
   var speechToText;
+
   @override
   void initState() {
     super.initState();
@@ -88,30 +92,47 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
     initRecorder();
   }
 
+  FlutterSoundRecorder? recorder;
+  final recordingDataController = StreamController<Food>();
+
   @override
   void dispose() {
-    recorder.closeRecorder();
+    FlutterSoundRecorder().closeRecorder();
+    // audioPlayer.dispose();
     super.dispose();
   }
 
   var config;
   Future<void> initRecorder() async {
-    config = RecognitionConfig(
-        encoding: AudioEncoding.LINEAR16,
-        model: RecognitionModel.basic,
-        enableAutomaticPunctuation: true,
-        sampleRateHertz: 16000,
-        languageCode: 'en-US');
     final status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
       throw "Microphone permission not granted";
     }
+    config = RecognitionConfig(
+        encoding: AudioEncoding.LINEAR16,
+        model: RecognitionModel.basic,
+        enableAutomaticPunctuation: true,
+        sampleRateHertz: 8000,
+        audioChannelCount: 1,
+        languageCode: 'en-US');
+  }
+
+  Future<String> createFile(String name) async {
+    var tempDir = await getTemporaryDirectory();
+    return '${tempDir.path}/$name.pcm';
   }
 
   Future record() async {
-    await recorder.openRecorder();
-    await recorder.startRecorder(toFile: 'audio');
-    await Future.delayed(const Duration(seconds: 3));
+    recorder ??= await FlutterSoundRecorder().openRecorder();
+    file = await createFile("audio");
+    await recorder!
+        .startRecorder(
+            sampleRate: 8000, numChannels: 1, codec: Codec.pcm16, toFile: file)
+        .onError((error, stackTrace) {
+      devTools.log("Something went wrong when recording",
+          error: error, stackTrace: stackTrace);
+    });
+    await Future.delayed(const Duration(seconds: 30));
     await stop();
     setState(() {
       isRecorded = true;
@@ -119,20 +140,34 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
   }
 
   late File audioFile;
-  var response = "h";
+  var textResponse = "h";
   Future stop() async {
+    if (recorder == null) return;
     setState(() {
       _containerColor = const Color(0xff00caed);
     });
-    final audioPath = await recorder.stopRecorder();
-    audioFile = File(audioPath!);
 
-    Future<List<int>> _getAudioContent() async {
-      return File(audioPath).readAsBytesSync().toList();
+    await recorder?.stopRecorder();
+    await recorder?.closeRecorder();
+    recorder = null;
+
+    try {
+      audio = File(await createFile("audio"));
+      if (audio != null) {
+        await speechToText
+            .recognize(config, await audio!.readAsBytes())
+            .then((value) {
+          setState(() {
+            print(value);
+            textResponse = value.toString();
+          });
+        });
+      } else {
+        print("Null Audio");
+      }
+    } catch (e) {
+      print("Error: $e");
     }
-
-    final audio = await _getAudioContent();
-    response = await speechToText.recognize(config, audio);
   }
 
   @override
@@ -175,19 +210,20 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 50.0),
-              child: Image.network(
-                selectedExamples[currentExample].image,
-                width: screenWidth - 100,
-                height: 300,
-                fit: BoxFit.contain,
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 50.0),
+            //   child: Image.network(
+            //     selectedExamples[currentExample].image,
+            //     width: screenWidth - 100,
+            //     height: 300,
+            //     fit: BoxFit.contain,
+            //   ),
+            // ),
             const SizedBox(height: 60),
+
             Text(
-              response,
-              style: TextStyle(color: Colors.black),
+              textResponse,
+              style: const TextStyle(color: Colors.black),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 50, right: 50),
@@ -205,7 +241,7 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      playAudioFromUrl(selectedExamples[currentExample].sound);
+                      // playAudioFromUrl(selectedExamples[currentExample].sound);
                     },
                     child: Container(
                       width: 55,
@@ -241,7 +277,13 @@ class DhwaniMockScreenState extends State<DhwaniMockScreen> {
                   setState(() {
                     _containerColor = const Color(0xff319F43);
                   });
-                  await audioPlayer.play(UrlSource(audioFile.path));
+                  await audioPlayer.openPlayer();
+                  await audioPlayer.startPlayer(
+                    fromURI: audio!.path,
+                    codec: Codec.pcm16,
+                    numChannels: 1,
+                    sampleRate: 16000,
+                  );
                   setState(() {
                     _containerColor = const Color(0xff00caed);
                   });

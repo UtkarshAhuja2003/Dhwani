@@ -4,8 +4,8 @@ import 'package:dhwani/views/onboarding/screen3.dart';
 import 'package:dhwani/views/onboarding/screen4.dart';
 import 'package:flutter/material.dart';
 
-
 class OnboardingScreen extends StatefulWidget {
+  static const routename = '/onboarding';
   const OnboardingScreen({super.key});
 
   @override
@@ -24,16 +24,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-        PageView(
-          controller: controller,
-          children: [
-             FirstScreen(controller: controller),
-             SecondScreen(controller: controller),
-             ThirdScreen(controller: controller),
-             LastScreen(controller: controller)
-          ],
-        ),
+      body: PageView(
+        controller: controller,
+        children: [
+          FirstScreen(controller: controller),
+          SecondScreen(controller: controller),
+          ThirdScreen(controller: controller),
+          LastScreen(controller: controller)
+        ],
+      ),
       // bottomSheet: Container(
       //   padding: const EdgeInsets.symmetric(horizontal: 20),
       //   height: 80,
@@ -47,7 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       //               controller.previousPage(
       //                   duration: const Duration(milliseconds: 500),
       //                   curve: Curves.easeInOut);
-      //             }, 
+      //             },
       //             child: const Text('Prev')
       //           ),
       //           TextButton(
@@ -69,8 +68,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       //               activeDotColor: Colors.teal.shade200
       //           ),
       //           onDotClicked: (index)=> controller.animateToPage(
-      //             index, 
-      //             duration: const Duration(milliseconds: 500), 
+      //             index,
+      //             duration: const Duration(milliseconds: 500),
       //             curve: Curves.easeIn
       //           ),
       //         ),

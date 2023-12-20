@@ -1,13 +1,15 @@
+import 'package:dhwani/routes/app_route_config.dart';
 import 'package:dhwani/views/auth/login_view.dart';
 import 'package:dhwani/views/auth/signup_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AuthHeader extends StatelessWidget {
+class AuthHeader extends ConsumerWidget {
   const AuthHeader({super.key, this.authType});
   final String? authType;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Stack(children: [
       Image(
@@ -27,8 +29,7 @@ class AuthHeader extends StatelessWidget {
               InkWell(
                 onTap: () {
                   if (authType == "SignIn") {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const SignupView()));
+                    ref.read(routerProvider).go(SignupView.routename);
                   }
                 },
                 child: Text(
@@ -51,8 +52,7 @@ class AuthHeader extends StatelessWidget {
               InkWell(
                 onTap: () {
                   if (authType == "SignUp") {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const LoginView()));
+                    ref.read(routerProvider).go(LoginView.routename);
                   }
                 },
                 child: Text(

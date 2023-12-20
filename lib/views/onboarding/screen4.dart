@@ -43,10 +43,7 @@ class LastScreen extends StatelessWidget {
               ),
               child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const DhwaniScreen()));
+                   
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff0CC0DF),
