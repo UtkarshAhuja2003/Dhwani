@@ -63,6 +63,25 @@ Future<dynamic> main(final context) async {
               data: {"example_ids": exampleIds});
           exampleIds.clear();
         }
+
+        Directory alphaAudioDir = Directory("alphaAudios");
+        String? alphaAudioId;
+        if (await alphaAudioDir.exists()) {
+          for (var data in alphaAudioDir.listSync()) {
+            final fileName = data.path.split('alphaAudios\\').last;
+            if (fileName.split(".mp3").first.contains(exName)) {
+              alphaAudioId = await storage
+                  .createFile(
+                      bucketId: "alphabetsound",
+                      fileId: ID.unique(),
+                      file: InputFile.fromPath(
+                          path: data.path,
+                          filename: fileName))
+                  .then((value) => value.$id);
+            }
+          }
+        }
+
         alphabetDocumentId = await db.createDocument(
             databaseId: databaseId,
             collectionId: alphabetCollection,
@@ -70,6 +89,7 @@ Future<dynamic> main(final context) async {
             data: {
               "name": alpha,
               "description": alphaDesc,
+              "sound_id": alphaAudioId
             }).then((value) => value.$id);
         alphabetIds.add(alphabetDocumentId);
 
@@ -98,7 +118,7 @@ Future<dynamic> main(final context) async {
           for (var data in audioDir.listSync()) {
             final fileName = data.path.split('audio\\').last;
             if (fileName.split(".mp3").first.contains(exName)) {
-              imgId = await storage
+              audioId = await storage
                   .createFile(
                       bucketId: "examplesound",
                       fileId: ID.unique(),
@@ -125,7 +145,7 @@ Future<dynamic> main(final context) async {
       context.log('Document Added');
     }
 
-    // `res.json()` is a handy helper for sending JSON
+    // res.json() is a handy helper for sending JSON
     return context.res.json({
       'message': 'Task Completed Successfully',
       'Sounds': (await db.listDocuments(

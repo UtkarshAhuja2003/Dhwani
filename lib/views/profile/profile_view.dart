@@ -134,6 +134,64 @@ class ProfileView extends ConsumerWidget {
                       ],
                     ),
                   ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  width: screenWidth,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10, left: 40, right: 40, bottom: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("उपलब्धियों",
+                            style: TextStyle(
+                                letterSpacing: 0.9,
+                                fontSize: 25,
+                                color: Color(0xff04434E),
+                                fontWeight: FontWeight.w600)),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            BadgeContainer(
+                              type: "Welcome",
+                            ),
+                            BadgeContainer(
+                              type: "Module",
+                            ),
+                            BadgeContainer(
+                              type: "Time",
+                            ),
+                            BadgeContainer(
+                              type: "Test",
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                 Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  width: screenWidth,
+                  child: const Padding(
+                    padding:  EdgeInsets.only(
+                        top: 10, left: 40, right: 40, bottom: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                         Text("परीक्षा के अंक",
+                            style: TextStyle(
+                                letterSpacing: 0.9,
+                                fontSize: 25,
+                                color: Color(0xff04434E),
+                                fontWeight: FontWeight.w600)),
+                         SizedBox(height: 10),
+                        Image(image: AssetImage("assets/Testchart.png"))
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),
@@ -200,6 +258,35 @@ class StatsContainer extends StatelessWidget {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class BadgeContainer extends StatelessWidget {
+  BadgeContainer({Key? key, required this.type});
+  String type;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      width: 80,
+      decoration: BoxDecoration(
+        color: const Color(0xffD9D9D9),
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Image(
+              image: (type == "Welcome")
+                  ? const AssetImage("assets/profile/Welcome.png")
+                  : (type == "Module")
+                      ? const AssetImage("assets/profile/Modules.png")
+                      : (type == "Test")
+                          ? const AssetImage("assets/profile/TestBadge.png")
+                          : const AssetImage("assets/profile/TimeBadge.png"),
+            ),
       ),
     );
   }
