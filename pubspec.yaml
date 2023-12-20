@@ -48,6 +48,7 @@ dependencies:
   speech_to_text: ^6.5.1
   appwrite:
     path: "sdk-for-flutter"
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:

@@ -1,22 +1,19 @@
+import 'package:dhwani/services/db_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../model/dhwani.dart';
 import '../dhwani_screen.dart';
 import 'dhwani_example/dhwani_example_screen.dart';
 
-
-class DhwaniDetailScreen extends StatefulWidget {
+class DhwaniDetailScreen extends ConsumerWidget {
   const DhwaniDetailScreen({super.key, required this.dhwani});
 
-  final DhwaniElement dhwani;
+  final Sounds dhwani;
 
   @override
-  State<DhwaniDetailScreen> createState() => _DhwaniDetailScreenState();
-}
-
-class _DhwaniDetailScreenState extends State<DhwaniDetailScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Material(
@@ -50,9 +47,7 @@ class _DhwaniDetailScreenState extends State<DhwaniDetailScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const DhwaniScreen()
-                                )
-                            );
+                                        const DhwaniScreen()));
                           },
                           child: const Text(
                             "अगला खंड",
@@ -70,7 +65,7 @@ class _DhwaniDetailScreenState extends State<DhwaniDetailScreen> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      widget.dhwani.dhwaniName,
+                      dhwani.name,
                       style: const TextStyle(
                         fontSize: 40,
                         color: Colors.black,
@@ -86,49 +81,65 @@ class _DhwaniDetailScreenState extends State<DhwaniDetailScreen> {
               width: screenWidth,
               height: 2,
             ),
-             Padding(
-               padding: const EdgeInsets.only(left: 30, right: 30),
-               child: Image.network(
-                widget.dhwani.dhwaniImage,
-                width: screenWidth,
-                fit: BoxFit.fill,
-                           ),
-             ),
+            ref.watch(soundImageProvider(dhwani.imageId)).when(
+                data: (bytes) {
+                  return Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Image.memory(bytes));
+                },
+                loading: () {
+                  return const SizedBox.shrink();
+                },
+                error: (e, _) => const Text("Something went wrong")),
             Padding(
               padding: const EdgeInsets.all(30.0),
-              child: Text(widget.dhwani.description,
+              child: Text(
+                dhwani.description,
                 style: const TextStyle(
                   fontWeight: FontWeight.w300,
                   fontSize: 23,
                   fontFamily: "NotoSansDevanagari",
                   color: Color(0xff04434E),
-                ),),
+                ),
+              ),
             ),
-            Text("हिंदी में ${widget.dhwani.dhwanis.length} मुख्य ओष्ठय ध्वनियाँ हैं :",
-                style: const TextStyle(
-                  fontWeight: FontWeight.w300,
-                  fontSize: 23,
-                  fontFamily: "NotoSansDevanagari",
-                  color: Color(0xff04434E),
-                ),),
+            Text(
+              "हिंदी में ${dhwani.alphabetIds.length} मुख्य ओष्ठय ध्वनियाँ हैं :",
+              style: const TextStyle(
+                fontWeight: FontWeight.w300,
+                fontSize: 23,
+                fontFamily: "NotoSansDevanagari",
+                color: Color(0xff04434E),
+              ),
+            ),
             GridView.builder(
               physics: const ScrollPhysics(),
               shrinkWrap: true,
               padding: const EdgeInsets.all(32.0),
-              gridDelegate:const  SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 5,
                 crossAxisSpacing: 25.0,
                 mainAxisSpacing: 25.0,
               ),
-              itemCount: widget.dhwani.dhwanis.length,
+              itemCount: dhwani.alphabetIds.length,
               itemBuilder: (BuildContext context, int index) {
-                return Text(widget.dhwani.dhwanis[index].name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 50,
-                    fontFamily: "NotoSansDevanagari",
-                    color: Color(0xff04434E),
-                  ),);
+                return ref
+                    .watch(alphabetProvider(dhwani.alphabetIds[index]))
+                    .when(
+                      data: (data) {
+                        return Text(
+                          data.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 50,
+                            fontFamily: "NotoSansDevanagari",
+                            color: Color(0xff04434E),
+                          ),
+                        );
+                      },
+                      error: (error, stackTrace) => Text(error.toString()),
+                      loading: () => const SizedBox.shrink(),
+                    );
               },
             ),
             Padding(
@@ -137,33 +148,30 @@ class _DhwaniDetailScreenState extends State<DhwaniDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 10,
-                      backgroundColor: const Color(0xff0CC0DF),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 10,
+                        backgroundColor: const Color(0xff0CC0DF),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  DhwaniExampleScreen(
-                                      alphabet: widget.dhwani.dhwanis)
-                          )
-                      );
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Icon(Icons.arrow_forward, color: Colors.white,),
-                    )
-                  ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DhwaniExampleScreen(
+                                    alphabetIds: dhwani.alphabetIds)));
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.white,
+                        ),
+                      )),
                 ],
               ),
             ),
-
-
           ],
         ),
       ),

@@ -95,43 +95,45 @@ class ProfileView extends ConsumerWidget {
                   decoration: const BoxDecoration(
                     color: Color.fromRGBO(12, 192, 223, 0.08),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 10, left: 40, right: 40, bottom: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Statistics",
-                            style: TextStyle(
-                                letterSpacing: 0.9,
-                                fontSize: 25,
-                                color: Color(0xff04434E),
-                                fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            StatsContainer(
-                              type: "Streak",
-                            ),
-                            StatsContainer(
-                              type: "Module",
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            StatsContainer(
-                              type: "Time",
-                            ),
-                            StatsContainer(
-                              type: "Test",
-                            )
-                          ],
-                        )
-                      ],
+                  child: Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10, left: 30, right: 30, bottom: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Statistics",
+                              style: TextStyle(
+                                  letterSpacing: 0.9,
+                                  fontSize: 25,
+                                  color: Color(0xff04434E),
+                                  fontWeight: FontWeight.w600)),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              StatsContainer(
+                                type: "Streak",
+                              ),
+                              StatsContainer(
+                                type: "Module",
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              StatsContainer(
+                                type: "Time",
+                              ),
+                              StatsContainer(
+                                type: "Test",
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -163,9 +165,9 @@ class ProfileView extends ConsumerWidget {
                             BadgeContainer(
                               type: "Time",
                             ),
-                            BadgeContainer(
-                              type: "Test",
-                            )
+                            // BadgeContainer(
+                            //   type: "Test",
+                            // )
                           ],
                         )
                       ],
@@ -207,7 +209,7 @@ class StatsContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 90,
-      width: 160,
+      width: 140,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
@@ -245,7 +247,7 @@ class StatsContainer extends StatelessWidget {
                         (type == "Streak")
                             ? "स्ट्रीक"
                             : (type == "Module")
-                                ? "अध्याय समाप्त"
+                                ? "अध्याय"
                                 : (type == "Time")
                                     ? "समय बिताया "
                                     : "परीक्षा समाप्त",

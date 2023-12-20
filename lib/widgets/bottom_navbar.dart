@@ -2,7 +2,6 @@ import 'package:carbon_icons/carbon_icons.dart';
 import 'package:dhwani/routes/app_route_config.dart';
 import 'package:dhwani/views/dhwani_main/dhwani_screen.dart';
 import 'package:dhwani/views/mock/mock_view.dart';
-import 'package:dhwani/views/profile/profile_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -66,9 +65,10 @@ class BottomNavbar extends ConsumerWidget {
               InkWell(
                 onTap: () {
                   if (index != 2) {
-                    ref.read(routerProvider).go(ProfileView.routename);
+                    ref.read(routerProvider).go(DhwaniScreen.routename);
                   }
-                },
+                  }
+              ,
                 child: Icon(
                   CarbonIcons.user_filled,
                   size: 34,
